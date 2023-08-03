@@ -1,16 +1,33 @@
-'use client';
+"use client";
 import { useState } from "react";
 
 const ContactForm = () => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState([]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Fullname: ", fullname)
-    console.log("Email: ", email)
-    console.log("Message: ", message)
+    console.log("Fullname: ", fullname);
+    console.log("Email: ", email);
+    console.log("Message: ", message);
+
+    const res = await fetch("api/contact", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        fullname,
+        email,
+        message,
+      }),
+    });
+
+    const { msg } = await res.json();
+    setError(msg);
+    console.log(error);
   };
 
   return (
@@ -61,7 +78,9 @@ const ContactForm = () => {
       </form>
       <div>
         <div className="bg-slate-100 flex flex-col">
-          <div className="text-red-600 px-5 py-2 rounded-lg">Error Message</div>
+          
+              <div className="text-red-600 px-5 py-2 rounded-lg">Error Message</div>;
+          
         </div>
       </div>
     </>
