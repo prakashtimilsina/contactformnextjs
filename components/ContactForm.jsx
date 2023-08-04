@@ -6,6 +6,7 @@ const ContactForm = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState([]);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,9 +26,17 @@ const ContactForm = () => {
       }),
     });
 
-    const { msg } = await res.json();
+    const { msg, success } = await res.json();
     setError(msg);
+    setSuccess(success);
     console.log(error);
+    
+    if (success){
+      setFullname("");
+      setEmail("");
+      setMessage([]);
+    }
+
   };
 
   return (
@@ -76,13 +85,13 @@ const ContactForm = () => {
           Send
         </button>
       </form>
-      <div>
         <div className="bg-slate-100 flex flex-col">
-          
-              <div className="text-red-600 px-5 py-2 rounded-lg">Error Message</div>;
-          
+          {
+            error && error.map((e)=>{
+              <div className={`${success ? 'text-green-600' : 'text-red-600'} px-5 py-2 rounded-lg`}>{e}</div>;
+            })
+          }     
         </div>
-      </div>
     </>
   );
 };
